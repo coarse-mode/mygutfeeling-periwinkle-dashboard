@@ -1,0 +1,84 @@
+name: Generate Data JSON
+
+on:
+  push:
+    paths:
+      - 'images/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate data.json from images
+        run: |
+          echo "[" > data.json
+          first=true
+          for file in images/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+            [ -f "$file" ] || continue
+            filename=$(basename "$file")
+
+            # Parse: Country_State_City_Landmark_Lat_Lon_Year.ext
+            # Remove extension
+            name="${filename%.*}"
+
+            # Split by underscore
+            IFS='_' read -ra PARTS <<< "$name"
+
+            # Need at least 7 parts
+            if [ ${#PARTS[@]} -ge 7 ]; then
+              country="${PARTS[0]}"
+              state="${PARTS[1]}"
+              city="${PARTS[2]}"
+
+              # Landmark might have multiple parts, year is last, lon is second-to-last, lat is third-to-last
+              year="${PARTS[-1]}"
+              lon="${PARTS[-2]}"
+              lat="${PARTS[-3]}"
+
+              # Landmark is everything between city and lat
+              landmark=""
+              for ((i=3; i<${#PARTS[@]}-3; i++)); do
+                if [ -n "$landmark" ]; then
+                  landmark="$landmark "
+                fi
+                landmark="$landmark${PARTS[i]}"
+              done
+
+              # Add comma if not first
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> data.json
+              fi
+
+              # Write JSON object
+              cat >> data.json << EOF
+  {
+    "year": $year,
+    "country": "$country",
+    "province": "$state",
+    "city": "$city",
+    "landmark": "$landmark",
+            "lat": $lat,
+    "lng": $lon,
+    "image": "$file"
+  }
+EOF
+            fi
+          done
+          echo "" >> data.json
+          echo "]" >> data.json
+
+      - name: Commit data.json
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add data.json
+          git diff --staged --quiet || git commit -m "Auto-generate data.json from images"
+          git push
