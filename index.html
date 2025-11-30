@@ -1171,109 +1171,93 @@
             filteredSites.sort((a, b) => a.lng - b.lng);
 
             let currentIndex = 0;
-            const maxVisibleCards = 5;
-            const activeCards = [];
+            let activeHighlight = null;
+            let activeLine = null;
 
             function showNextSite() {
                 if (!isAutoPlaying) return;
 
+                // Remove previous highlight and line
+                if (activeHighlight) activeHighlight.remove();
+                if (activeLine) activeLine.remove();
+
                 if (currentIndex >= filteredSites.length) {
                     currentIndex = 0;
-                    // Clear old cards for fresh loop
-                    activeCards.forEach(card => card.remove());
-                    activeCards.length = 0;
                 }
 
                 const site = filteredSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                // Offset card away from marker (fan out)
-                const offsetAngle = (currentIndex % 8) * (Math.PI / 4) - Math.PI / 2;
-                const offsetDist = 80;
-                const cardX = x + Math.cos(offsetAngle) * offsetDist;
-                const cardY = y + Math.sin(offsetAngle) * offsetDist;
+                // Create highlight ring on the city
+                activeHighlight = g.append("circle")
+                    .attr("class", "autoplay-highlight")
+                    .attr("cx", x)
+                    .attr("cy", y)
+                    .attr("r", 8)
+                    .attr("fill", "none")
+                    .attr("stroke", "#ccccff")
+                    .attr("stroke-width", 2)
+                    .attr("opacity", 0)
+                    .style("filter", "drop-shadow(0 0 6px rgba(204,204,255,0.8))");
 
-                // Create mini card group
-                const cardGroup = g.append("g")
-                    .attr("class", "autoplay-card")
-                    .style("opacity", 0);
+                activeHighlight.transition()
+                    .duration(300)
+                    .attr("opacity", 1);
 
-                // Connecting line
-                cardGroup.append("line")
-                    .attr("x1", x).attr("y1", y)
-                    .attr("x2", cardX).attr("y2", cardY)
+                // Draw thin line from city to tooltip area (right edge)
+                const tooltipX = window.innerWidth - 160;
+                const tooltipY = 200;
+                const screenX = currentTransform.applyX(x);
+                const screenY = currentTransform.applyY(y);
+
+                activeLine = d3.select("#map-container").append("svg")
+                    .attr("class", "autoplay-line-svg")
+                    .style("position", "absolute")
+                    .style("top", "0")
+                    .style("left", "0")
+                    .style("width", "100%")
+                    .style("height", "100%")
+                    .style("pointer-events", "none")
+                    .style("z-index", "999");
+
+                activeLine.append("line")
+                    .attr("x1", screenX)
+                    .attr("y1", screenY)
+                    .attr("x2", tooltipX)
+                    .attr("y2", tooltipY + 140)
                     .attr("stroke", "rgba(204,204,255,0.4)")
-                    .attr("stroke-width", 1);
+                    .attr("stroke-width", 1)
+                    .attr("stroke-dasharray", "4,4")
+                    .attr("opacity", 0)
+                    .transition()
+                    .duration(300)
+                    .attr("opacity", 1);
 
-                // Mini card background
-                const cardW = 120, cardH = 90;
-                cardGroup.append("rect")
-                    .attr("x", cardX - cardW/2)
-                    .attr("y", cardY - cardH/2)
-                    .attr("width", cardW)
-                    .attr("height", cardH)
-                    .attr("rx", 6)
-                    .attr("fill", "rgba(20,20,35,0.95)")
-                    .attr("stroke", "rgba(204,204,255,0.5)")
-                    .attr("stroke-width", 1);
-
-                // Thumbnail
-                const imgSize = 50;
-                cardGroup.append("image")
-                    .attr("x", cardX - cardW/2 + 6)
-                    .attr("y", cardY - cardH/2 + 6)
-                    .attr("width", imgSize)
-                    .attr("height", imgSize)
-                    .attr("href", site.image || `https://via.placeholder.com/50x50/3a3a5a/ccccff?text=${site.city.charAt(0)}`)
-                    .attr("preserveAspectRatio", "xMidYMid slice")
-                    .attr("clip-path", "inset(0 round 4px)");
-
-                // Landmark text
-                cardGroup.append("text")
-                    .attr("x", cardX - cardW/2 + 62)
-                    .attr("y", cardY - cardH/2 + 20)
-                    .attr("fill", "#ccccff")
-                    .attr("font-size", "9px")
-                    .attr("font-weight", "600")
-                    .text(site.landmark.substring(0, 14));
-
-                // City text
-                cardGroup.append("text")
-                    .attr("x", cardX - cardW/2 + 62)
-                    .attr("y", cardY - cardH/2 + 32)
-                    .attr("fill", "rgba(200,200,255,0.7)")
-                    .attr("font-size", "7px")
-                    .text(site.city.substring(0, 16));
-
-                // Country
-                cardGroup.append("text")
-                    .attr("x", cardX - cardW/2 + 6)
-                    .attr("y", cardY + cardH/2 - 8)
-                    .attr("fill", "rgba(180,180,255,0.6)")
-                    .attr("font-size", "7px")
-                    .text(site.country);
-
-                // Fade in
-                cardGroup.transition()
-                    .duration(400)
-                    .style("opacity", 1);
-
-                activeCards.push(cardGroup);
-
-                // Remove old cards (keep max visible)
-                if (activeCards.length > maxVisibleCards) {
-                    const oldCard = activeCards.shift();
-                    oldCard.transition()
-                        .duration(300)
-                        .style("opacity", 0)
-                        .remove();
-                }
+                // Show tooltip at fixed right position
+                const imgSrc = site.image || `https://via.placeholder.com/280x280/3a3a5a/ccccff?text=${encodeURIComponent(site.city)}`;
+                tooltip.innerHTML = `
+                    <div class="tooltip-photo-container">
+                        <img src="${imgSrc}" class="tooltip-img" alt="${site.landmark}" onerror="this.src='https://via.placeholder.com/280x280/3a3a5a/ccccff?text=No+Image'">
+                    </div>
+                    <div class="tooltip-content">
+                        <div class="tooltip-landmark">${site.landmark}</div>
+                        <div class="tooltip-city">${site.city}, ${site.province}</div>
+                        <div class="tooltip-footer">
+                            <div class="tooltip-country">${site.country}</div>
+                            <div class="thank-you-box">THANK YOU!</div>
+                        </div>
+                    </div>
+                `;
+                tooltip.style.right = '20px';
+                tooltip.style.left = 'auto';
+                tooltip.style.top = '200px';
+                tooltip.classList.add('visible');
 
                 currentIndex++;
             }
 
             showNextSite();
-            autoplayInterval = setInterval(showNextSite, 800);
+            autoplayInterval = setInterval(showNextSite, 2500);
         }
 
         function stopAutoPlay() {
@@ -1282,6 +1266,9 @@
             document.getElementById('autoplay-toggle').classList.remove('active');
             document.getElementById('play-pause-icon').textContent = '▶';
             tooltip.classList.remove('visible');
+            // Clean up autoplay elements
+            g.selectAll(".autoplay-highlight").remove();
+            d3.selectAll(".autoplay-line-svg").remove();
         }
 
         document.getElementById('autoplay-toggle').addEventListener('click', function() {
