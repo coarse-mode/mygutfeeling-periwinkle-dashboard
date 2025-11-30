@@ -1082,7 +1082,8 @@
             document.getElementById('autoplay-toggle').classList.add('active');
             document.getElementById('autoplay-toggle').innerHTML = '⏸ Pause Tour';
 
-            const currentYear = document.querySelector('.year-btn.active').dataset.year;
+            const activeBtn = document.querySelector('.year-btn.active');
+            const currentYear = activeBtn ? activeBtn.dataset.year : 'all';
             const filteredSites = currentYear === 'all' ? sites : sites.filter(s => s.year === parseInt(currentYear));
 
             filteredSites.sort((a, b) => a.lng - b.lng);
