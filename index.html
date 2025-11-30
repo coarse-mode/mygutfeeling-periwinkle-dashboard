@@ -483,25 +483,24 @@
             height: 450px;
             pointer-events: none;
             z-index: 500;
-            opacity: 0.4;
+            opacity: 0.7;
             overflow: visible;
         }
 
         .logo-container svg { width: 100%; height: 100%; overflow: visible; }
 
         .logo-text-path {
-            fill: #b8b8ff;
+            fill: #9999dd;
             font-size: 13px;
             font-weight: 400;
             letter-spacing: 0.25em;
             text-transform: uppercase;
-            filter: drop-shadow(0 0 2px rgba(180,180,255,0.8));
-            animation: text-glow 4s ease-in-out infinite;
+            animation: text-glow 5s ease-in-out infinite;
         }
 
         @keyframes text-glow {
-            0%, 100% { fill: #b8b8ff; filter: drop-shadow(0 0 2px rgba(180,180,255,0.6)); }
-            50% { fill: #d0d0ff; filter: drop-shadow(0 0 6px rgba(200,200,255,1)); }
+            0%, 100% { fill: #9999dd; }
+            50% { fill: #b8b8ff; filter: drop-shadow(0 0 3px rgba(180,180,255,0.5)); }
         }
 
         .logo-center-group { animation: center-pulse 6s ease-in-out infinite; }
