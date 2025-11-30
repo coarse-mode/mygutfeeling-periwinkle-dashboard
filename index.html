@@ -300,6 +300,21 @@
             animation: card-float 3s ease-in-out infinite;
         }
 
+        .tooltip.autoplay-mode {
+            transform: scale(0.7);
+            transition: opacity 0.6s ease, transform 0.6s ease, left 0.8s ease, top 0.8s ease;
+        }
+
+        .tooltip.autoplay-mode.visible {
+            transform: scale(0.7);
+            animation: card-float-small 3s ease-in-out infinite;
+        }
+
+        @keyframes card-float-small {
+            0%, 100% { transform: scale(0.7) translateY(0px); }
+            50% { transform: scale(0.7) translateY(-2px); }
+        }
+
         @keyframes card-float {
             0%, 100% { transform: scale(1) translateY(0px); }
             50% { transform: scale(1) translateY(-3px); }
@@ -1154,7 +1169,7 @@
             if (isAutoPlaying) return;
             isAutoPlaying = true;
             document.getElementById('autoplay-toggle').classList.add('active');
-            // Bar stays the same - LIVE indicator always visible
+            tooltip.classList.add('autoplay-mode');
 
             const activeBtn = document.querySelector('.year-btn.active');
             const currentYear = activeBtn ? activeBtn.dataset.year : 'all';
@@ -1176,34 +1191,76 @@
                 const site = filteredSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                const scale = 2.5;
+                // Gentler zoom: 1.25 (range 1.15-1.35)
+                const scale = 1.25;
                 const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
+                // Smoother transition
                 svg.transition()
-                    .duration(800)
+                    .duration(1200)
+                    .ease(d3.easeCubicInOut)
                     .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
 
                 setTimeout(() => {
                     if (isAutoPlaying) {
-                        showTooltip({}, site, x, y);
+                        showAutoplayTooltip(site, x, y, scale);
                     }
-                }, 900);
+                }, 1000);
 
                 currentIndex++;
             }
 
             showNextSite();
-            autoplayInterval = setInterval(showNextSite, 2000);
+            autoplayInterval = setInterval(showNextSite, 3500);
+        }
+
+        function showAutoplayTooltip(site, x, y, scale) {
+            const tx = currentTransform.applyX(x);
+            const ty = currentTransform.applyY(y);
+
+            const imgSrc = site.image || `https://via.placeholder.com/280x280/3a3a5a/ccccff?text=${encodeURIComponent(site.city)}`;
+
+            tooltip.innerHTML = `
+                <div class="tooltip-photo-container">
+                    <img src="${imgSrc}" class="tooltip-img" alt="${site.landmark}" onerror="this.src='https://via.placeholder.com/280x280/3a3a5a/ccccff?text=No+Image'">
+                </div>
+                <div class="tooltip-content">
+                    <div class="tooltip-landmark">${site.landmark}</div>
+                    <div class="tooltip-city">${site.city}, ${site.province}</div>
+                    <div class="tooltip-footer">
+                        <div class="tooltip-country">${site.country}</div>
+                        <div class="thank-you-box">THANK YOU!</div>
+                    </div>
+                </div>
+            `;
+
+            // Offset 15% of viewport width from city (adjusted by zoom)
+            const offsetX = window.innerWidth * 0.15 / scale;
+            const tooltipWidth = 280 * 0.7; // scaled tooltip width
+
+            // Position to the right of city, or left if near right edge
+            let left = tx + offsetX;
+            let top = ty - 100;
+
+            if (left + tooltipWidth > window.innerWidth - 20) {
+                left = tx - offsetX - tooltipWidth;
+            }
+            if (top < 60) top = 60;
+            if (top + 300 > window.innerHeight) top = window.innerHeight - 320;
+
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+            tooltip.classList.add('visible');
         }
 
         function stopAutoPlay() {
             isAutoPlaying = false;
             clearInterval(autoplayInterval);
             document.getElementById('autoplay-toggle').classList.remove('active');
-            // Bar stays the same - LIVE indicator always visible
             tooltip.classList.remove('visible');
+            tooltip.classList.remove('autoplay-mode');
 
-            svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity);
+            svg.transition().duration(1200).ease(d3.easeCubicInOut).call(zoom.transform, d3.zoomIdentity);
         }
 
         document.getElementById('autoplay-toggle').addEventListener('click', function() {
