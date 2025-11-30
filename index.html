@@ -1183,12 +1183,8 @@
                 const site = filteredSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                const scale = 1.8;
-                const translate = [width / 2 - scale * x, height / 2 - scale * y];
-
-                svg.transition()
-                    .duration(800)
-                    .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+                // No zoom - just show tooltip at site location
+                // Map stays at original scale
 
                 setTimeout(() => {
                     if (isAutoPlaying) {
@@ -1200,7 +1196,7 @@
             }
 
             showNextSite();
-            autoplayInterval = setInterval(showNextSite, 2000);
+            autoplayInterval = setInterval(showNextSite, 1500);
         }
 
         function stopAutoPlay() {
@@ -1209,8 +1205,6 @@
             document.getElementById('autoplay-toggle').classList.remove('active');
             document.getElementById('play-pause-icon').textContent = '▶';
             tooltip.classList.remove('visible');
-
-            svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity);
         }
 
         document.getElementById('autoplay-toggle').addEventListener('click', function() {
@@ -1281,7 +1275,7 @@
             if (sites.length > 0) {
                 startAutoPlay();
             }
-        }, 4000);
+        }, 2000);
     </script>
 </body>
 </html>
