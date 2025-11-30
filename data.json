@@ -778,5 +778,345 @@
     "lat": 29.4241,
     "lng": -98.4936,
     "image": "images/USA_Texas_SanAntonio_Alamodome_29.4241_-98.4936_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Alberta",
+    "city": "Calgary",
+    "landmark": "Calgary Tower",
+    "lat": 51.0447,
+    "lng": -114.0719,
+    "year": 2024,
+    "image": "images/Canada_Alberta_Calgary_CalgaryTower_51.0447_-114.0719_2024.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Alberta",
+    "city": "Calgary",
+    "landmark": "Reconciliation Bridge",
+    "lat": 51.0447,
+    "lng": -114.0719,
+    "year": 2024,
+    "image": "images/Canada_Alberta_Calgary_ReconciliationBridge_51.0447_-114.0719_2024.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Alberta",
+    "city": "Edmonton",
+    "landmark": "High Level Bridge",
+    "lat": 53.5461,
+    "lng": -113.4938,
+    "year": 2023,
+    "image": "images/Canada_Alberta_Edmonton_HighLevelBridge_53.5461_-113.4938_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Alberta",
+    "city": "MedicineHat",
+    "landmark": "Saamis Tepee",
+    "lat": 50.0405,
+    "lng": -110.6764,
+    "year": 2024,
+    "image": "images/Canada_Alberta_MedicineHat_SaamisTepee_50.0405_-110.6764_2024.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "BritishColumbia",
+    "city": "Vancouver",
+    "landmark": "BCPlace",
+    "lat": 49.2827,
+    "lng": -123.1207,
+    "year": 2023,
+    "image": "images/Canada_BritishColumbia_Vancouver_BCPlace_49.2827_-123.1207_2023_2.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "BritishColumbia",
+    "city": "Vancouver",
+    "landmark": "BCPlaceand Science World",
+    "lat": 49.2827,
+    "lng": -123.1207,
+    "year": 2023,
+    "image": "images/Canada_BritishColumbia_Vancouver_BCPlaceandScienceWorld_49.2827_-123.1207_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "BritishColumbia",
+    "city": "Whistler",
+    "landmark": "Fitzsimmons Bridge",
+    "lat": 50.1163,
+    "lng": -122.9574,
+    "year": 2024,
+    "image": "images/Canada_BritishColumbia_Whistler_FitzsimmonsBridge_50.1163_-122.9574_2024_2.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Newfoundland",
+    "city": "StJohns",
+    "landmark": "Government House",
+    "lat": 47.5615,
+    "lng": -52.7126,
+    "year": 2022,
+    "image": "images/Canada_Newfoundland_StJohns_GovernmentHouse_47.5615_-52.7126_2022.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "NovaScotia",
+    "city": "Halifax",
+    "landmark": "Halifax City Hall",
+    "lat": 44.6488,
+    "lng": -63.5752,
+    "year": 2024,
+    "image": "images/Canada_NovaScotia_Halifax_HalifaxCityHall_44.6488_-63.5752_2024.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Brampton",
+    "landmark": "Riverwalk",
+    "lat": 43.7315,
+    "lng": -79.7624,
+    "year": 2023,
+    "image": "images/Canada_Ontario_Brampton_Riverwalk_43.7315_-79.7624_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "NiagaraFalls",
+    "landmark": "Niagara Falls",
+    "lat": 43.0896,
+    "lng": -79.0849,
+    "year": 2018,
+    "image": "images/Canada_Ontario_NiagaraFalls_NiagaraFalls_43.0896_-79.0849_2018.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "NiagaraFalls",
+    "landmark": "Niagara Falls",
+    "lat": 43.0896,
+    "lng": -79.0849,
+    "year": 2018,
+    "image": "images/Canada_Ontario_NiagaraFalls_NiagaraFalls_43.0896_-79.0849_2018_2.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "NiagaraFalls",
+    "landmark": "Niagara Falls",
+    "lat": 43.0896,
+    "lng": -79.0849,
+    "year": 2022,
+    "image": "images/Canada_Ontario_NiagaraFalls_NiagaraFalls_43.0896_-79.0849_2022.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "NiagaraFalls",
+    "landmark": "Niagara Falls",
+    "lat": 43.0896,
+    "lng": -79.0849,
+    "year": 2023,
+    "image": "images/Canada_Ontario_NiagaraFalls_NiagaraFalls_43.0896_-79.0849_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "StThomas",
+    "landmark": "Jumbo The Elephant",
+    "lat": 42.774,
+    "lng": -81.182,
+    "year": 2023,
+    "image": "images/Canada_Ontario_StThomas_JumboTheElephant_42.774_-81.182_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Toronto",
+    "landmark": "CNTower",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "year": 2019,
+    "image": "images/Canada_Ontario_Toronto_CNTower_43.6532_-79.3832_2019.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Toronto",
+    "landmark": "City Hall",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "year": 2023,
+    "image": "images/Canada_Ontario_Toronto_CityHall_43.6532_-79.3832_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Toronto",
+    "landmark": "City Halland Sign",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "year": 2019,
+    "image": "images/Canada_Ontario_Toronto_CityHallandSign_43.6532_-79.3832_2019.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Toronto",
+    "landmark": "MGFEvent",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "year": 2021,
+    "image": "images/Canada_Ontario_Toronto_MGFEvent_43.6532_-79.3832_2021.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Toronto",
+    "landmark": "Princess Gate",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "year": 2023,
+    "image": "images/Canada_Ontario_Toronto_PrincessGate_43.6532_-79.3832_2023.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Ontario",
+    "city": "Toronto",
+    "landmark": "Toronto Sign",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "year": 2020,
+    "image": "images/Canada_Ontario_Toronto_TorontoSign_43.6532_-79.3832_2020.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Quebec",
+    "city": "Montreal",
+    "landmark": "La Grande Roue",
+    "lat": 45.5017,
+    "lng": -73.5673,
+    "year": 2023,
+    "image": "images/Canada_Quebec_Montreal_LaGrandeRoue_45.5017_-73.5673_2023_2.jpg"
+  },
+  {
+    "country": "Canada",
+    "province": "Quebec",
+    "city": "Montreal",
+    "landmark": "Olympic Tower",
+    "lat": 45.5017,
+    "lng": -73.5673,
+    "year": 2023,
+    "image": "images/Canada_Quebec_Montreal_OlympicTower_45.5017_-73.5673_2023.jpg"
+  },
+  {
+    "country": "Cyprus",
+    "province": "Larnaca",
+    "city": "Larnaca",
+    "landmark": "Larnaca Castle",
+    "lat": 34.9003,
+    "lng": 33.6232,
+    "year": 2023,
+    "image": "images/Cyprus_Larnaca_Larnaca_LarnacaCastle_34.9003_33.6232_2023_3.jpg"
+  },
+  {
+    "country": "Japan",
+    "province": "Aichi",
+    "city": "Nagoya",
+    "landmark": "Nagoya Tower",
+    "lat": 35.1815,
+    "lng": 136.9066,
+    "year": 2023,
+    "image": "images/Japan_Aichi_Nagoya_NagoyaTower_35.1815_136.9066_2023.jpg"
+  },
+  {
+    "country": "UK",
+    "province": "Wales",
+    "city": "Cardiff",
+    "landmark": "Castell Coch",
+    "lat": 51.4816,
+    "lng": -3.1791,
+    "year": 2024,
+    "image": "images/UK_Wales_Cardiff_CastellCoch_51.4816_-3.1791_2024.jpg"
+  },
+  {
+    "country": "UK",
+    "province": "WestYorkshire",
+    "city": "Bradford",
+    "landmark": "Bradford City Hall",
+    "lat": 53.796,
+    "lng": -1.7594,
+    "year": 2024,
+    "image": "images/UK_WestYorkshire_Bradford_BradfordCityHall_53.796_-1.7594_2024.png"
+  },
+  {
+    "country": "USA",
+    "province": "California",
+    "city": "LosAngeles",
+    "landmark": "Courtyard Hotel",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "year": 2023,
+    "image": "images/USA_California_LosAngeles_CourtyardHotel_34.0522_-118.2437_2023.jpg"
+  },
+  {
+    "country": "USA",
+    "province": "California",
+    "city": "LosAngeles",
+    "landmark": "Crypto Arena",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "year": 2023,
+    "image": "images/USA_California_LosAngeles_CryptoArena_34.0522_-118.2437_2023.jpg"
+  },
+  {
+    "country": "USA",
+    "province": "California",
+    "city": "SanDiego",
+    "landmark": "Convention Center",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "year": 2024,
+    "image": "images/USA_California_SanDiego_ConventionCenter_32.7157_-117.1611_2024.jpg"
+  },
+  {
+    "country": "USA",
+    "province": "Hawaii",
+    "city": "Honolulu",
+    "landmark": "Aloha Tower",
+    "lat": 21.3069,
+    "lng": -157.8583,
+    "year": 2023,
+    "image": "images/USA_Hawaii_Honolulu_AlohaTower_21.3069_-157.8583_2023.jpg"
+  },
+  {
+    "country": "USA",
+    "province": "Massachusetts",
+    "city": "Foxborough",
+    "landmark": "Gillette Stadium",
+    "lat": 42.0654,
+    "lng": -71.2478,
+    "year": 2024,
+    "image": "images/USA_Massachusetts_Foxborough_GilletteStadium_42.0654_-71.2478_2024.jpg"
+  },
+  {
+    "country": "USA",
+    "province": "Minnesota",
+    "city": "Minneapolis",
+    "landmark": "I35Bridge",
+    "lat": 44.9778,
+    "lng": -93.265,
+    "year": 2024,
+    "image": "images/USA_Minnesota_Minneapolis_I35Bridge_44.9778_-93.265_2024.jpg"
+  },
+  {
+    "country": "USA",
+    "province": "Montana",
+    "city": "GreatFalls",
+    "landmark": "ARCHBridge",
+    "lat": 47.5002,
+    "lng": -111.3008,
+    "year": 2024,
+    "image": "images/USA_Montana_GreatFalls_ARCHBridge_47.5002_-111.3008_2024.jpg"
   }
 ]
