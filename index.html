@@ -1171,15 +1171,9 @@
             filteredSites.sort((a, b) => a.lng - b.lng);
 
             let currentIndex = 0;
-            let activeHighlight = null;
-            let activeLine = null;
 
             function showNextSite() {
                 if (!isAutoPlaying) return;
-
-                // Remove previous highlight and line
-                if (activeHighlight) activeHighlight.remove();
-                if (activeLine) activeLine.remove();
 
                 if (currentIndex >= filteredSites.length) {
                     currentIndex = 0;
@@ -1188,70 +1182,8 @@
                 const site = filteredSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                // Create highlight ring on the city
-                activeHighlight = g.append("circle")
-                    .attr("class", "autoplay-highlight")
-                    .attr("cx", x)
-                    .attr("cy", y)
-                    .attr("r", 8)
-                    .attr("fill", "none")
-                    .attr("stroke", "#ccccff")
-                    .attr("stroke-width", 2)
-                    .attr("opacity", 0)
-                    .style("filter", "drop-shadow(0 0 6px rgba(204,204,255,0.8))");
-
-                activeHighlight.transition()
-                    .duration(300)
-                    .attr("opacity", 1);
-
-                // Draw thin line from city to tooltip area (right edge)
-                const tooltipX = window.innerWidth - 170;
-                const tooltipY = 120;
-                const screenX = currentTransform.applyX(x);
-                const screenY = currentTransform.applyY(y);
-
-                activeLine = d3.select("#map-container").append("svg")
-                    .attr("class", "autoplay-line-svg")
-                    .style("position", "absolute")
-                    .style("top", "0")
-                    .style("left", "0")
-                    .style("width", "100%")
-                    .style("height", "100%")
-                    .style("pointer-events", "none")
-                    .style("z-index", "999");
-
-                activeLine.append("line")
-                    .attr("x1", screenX)
-                    .attr("y1", screenY)
-                    .attr("x2", tooltipX)
-                    .attr("y2", tooltipY + 200)
-                    .attr("stroke", "rgba(204,204,255,0.4)")
-                    .attr("stroke-width", 1)
-                    .attr("stroke-dasharray", "4,4")
-                    .attr("opacity", 0)
-                    .transition()
-                    .duration(300)
-                    .attr("opacity", 1);
-
-                // Show tooltip at fixed right position (within bounds)
-                const imgSrc = site.image || `https://via.placeholder.com/280x280/3a3a5a/ccccff?text=${encodeURIComponent(site.city)}`;
-                tooltip.innerHTML = `
-                    <div class="tooltip-photo-container">
-                        <img src="${imgSrc}" class="tooltip-img" alt="${site.landmark}" onerror="this.src='https://via.placeholder.com/280x280/3a3a5a/ccccff?text=No+Image'">
-                    </div>
-                    <div class="tooltip-content">
-                        <div class="tooltip-landmark">${site.landmark}</div>
-                        <div class="tooltip-city">${site.city}, ${site.province}</div>
-                        <div class="tooltip-footer">
-                            <div class="tooltip-country">${site.country}</div>
-                            <div class="thank-you-box">THANK YOU!</div>
-                        </div>
-                    </div>
-                `;
-                tooltip.style.right = '30px';
-                tooltip.style.left = 'auto';
-                tooltip.style.top = '120px';
-                tooltip.classList.add('visible');
+                // Use existing showTooltip - positions near marker intelligently
+                showTooltip(null, site, x, y);
 
                 currentIndex++;
             }
@@ -1266,9 +1198,6 @@
             document.getElementById('autoplay-toggle').classList.remove('active');
             document.getElementById('play-pause-icon').textContent = '▶';
             tooltip.classList.remove('visible');
-            // Clean up autoplay elements
-            g.selectAll(".autoplay-highlight").remove();
-            d3.selectAll(".autoplay-line-svg").remove();
         }
 
         document.getElementById('autoplay-toggle').addEventListener('click', function() {
