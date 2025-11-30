@@ -1205,8 +1205,8 @@
                     .attr("opacity", 1);
 
                 // Draw thin line from city to tooltip area (right edge)
-                const tooltipX = window.innerWidth - 160;
-                const tooltipY = 200;
+                const tooltipX = window.innerWidth - 170;
+                const tooltipY = 120;
                 const screenX = currentTransform.applyX(x);
                 const screenY = currentTransform.applyY(y);
 
@@ -1224,7 +1224,7 @@
                     .attr("x1", screenX)
                     .attr("y1", screenY)
                     .attr("x2", tooltipX)
-                    .attr("y2", tooltipY + 140)
+                    .attr("y2", tooltipY + 200)
                     .attr("stroke", "rgba(204,204,255,0.4)")
                     .attr("stroke-width", 1)
                     .attr("stroke-dasharray", "4,4")
@@ -1233,7 +1233,7 @@
                     .duration(300)
                     .attr("opacity", 1);
 
-                // Show tooltip at fixed right position
+                // Show tooltip at fixed right position (within bounds)
                 const imgSrc = site.image || `https://via.placeholder.com/280x280/3a3a5a/ccccff?text=${encodeURIComponent(site.city)}`;
                 tooltip.innerHTML = `
                     <div class="tooltip-photo-container">
@@ -1248,9 +1248,9 @@
                         </div>
                     </div>
                 `;
-                tooltip.style.right = '20px';
+                tooltip.style.right = '30px';
                 tooltip.style.left = 'auto';
-                tooltip.style.top = '200px';
+                tooltip.style.top = '120px';
                 tooltip.classList.add('visible');
 
                 currentIndex++;
