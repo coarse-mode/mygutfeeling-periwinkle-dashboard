@@ -1162,6 +1162,7 @@
             isAutoPlaying = true;
             document.getElementById('autoplay-toggle').classList.add('active');
             document.getElementById('play-pause-icon').textContent = '⏸';
+            tooltip.classList.remove('visible');
 
             const activeBtn = document.querySelector('.year-btn.active');
             const currentYear = activeBtn ? activeBtn.dataset.year : 'all';
@@ -1170,33 +1171,109 @@
             filteredSites.sort((a, b) => a.lng - b.lng);
 
             let currentIndex = 0;
+            const maxVisibleCards = 5;
+            const activeCards = [];
 
             function showNextSite() {
-                if (!isAutoPlaying || currentIndex >= filteredSites.length) {
-                    if (isAutoPlaying) {
-                        currentIndex = 0;
-                    } else {
-                        return;
-                    }
+                if (!isAutoPlaying) return;
+
+                if (currentIndex >= filteredSites.length) {
+                    currentIndex = 0;
+                    // Clear old cards for fresh loop
+                    activeCards.forEach(card => card.remove());
+                    activeCards.length = 0;
                 }
 
                 const site = filteredSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                // No zoom - just show tooltip at site location
-                // Map stays at original scale
+                // Offset card away from marker (fan out)
+                const offsetAngle = (currentIndex % 8) * (Math.PI / 4) - Math.PI / 2;
+                const offsetDist = 80;
+                const cardX = x + Math.cos(offsetAngle) * offsetDist;
+                const cardY = y + Math.sin(offsetAngle) * offsetDist;
 
-                setTimeout(() => {
-                    if (isAutoPlaying) {
-                        showTooltip({}, site, x, y);
-                    }
-                }, 900);
+                // Create mini card group
+                const cardGroup = g.append("g")
+                    .attr("class", "autoplay-card")
+                    .style("opacity", 0);
+
+                // Connecting line
+                cardGroup.append("line")
+                    .attr("x1", x).attr("y1", y)
+                    .attr("x2", cardX).attr("y2", cardY)
+                    .attr("stroke", "rgba(204,204,255,0.4)")
+                    .attr("stroke-width", 1);
+
+                // Mini card background
+                const cardW = 120, cardH = 90;
+                cardGroup.append("rect")
+                    .attr("x", cardX - cardW/2)
+                    .attr("y", cardY - cardH/2)
+                    .attr("width", cardW)
+                    .attr("height", cardH)
+                    .attr("rx", 6)
+                    .attr("fill", "rgba(20,20,35,0.95)")
+                    .attr("stroke", "rgba(204,204,255,0.5)")
+                    .attr("stroke-width", 1);
+
+                // Thumbnail
+                const imgSize = 50;
+                cardGroup.append("image")
+                    .attr("x", cardX - cardW/2 + 6)
+                    .attr("y", cardY - cardH/2 + 6)
+                    .attr("width", imgSize)
+                    .attr("height", imgSize)
+                    .attr("href", site.image || `https://via.placeholder.com/50x50/3a3a5a/ccccff?text=${site.city.charAt(0)}`)
+                    .attr("preserveAspectRatio", "xMidYMid slice")
+                    .attr("clip-path", "inset(0 round 4px)");
+
+                // Landmark text
+                cardGroup.append("text")
+                    .attr("x", cardX - cardW/2 + 62)
+                    .attr("y", cardY - cardH/2 + 20)
+                    .attr("fill", "#ccccff")
+                    .attr("font-size", "9px")
+                    .attr("font-weight", "600")
+                    .text(site.landmark.substring(0, 14));
+
+                // City text
+                cardGroup.append("text")
+                    .attr("x", cardX - cardW/2 + 62)
+                    .attr("y", cardY - cardH/2 + 32)
+                    .attr("fill", "rgba(200,200,255,0.7)")
+                    .attr("font-size", "7px")
+                    .text(site.city.substring(0, 16));
+
+                // Country
+                cardGroup.append("text")
+                    .attr("x", cardX - cardW/2 + 6)
+                    .attr("y", cardY + cardH/2 - 8)
+                    .attr("fill", "rgba(180,180,255,0.6)")
+                    .attr("font-size", "7px")
+                    .text(site.country);
+
+                // Fade in
+                cardGroup.transition()
+                    .duration(400)
+                    .style("opacity", 1);
+
+                activeCards.push(cardGroup);
+
+                // Remove old cards (keep max visible)
+                if (activeCards.length > maxVisibleCards) {
+                    const oldCard = activeCards.shift();
+                    oldCard.transition()
+                        .duration(300)
+                        .style("opacity", 0)
+                        .remove();
+                }
 
                 currentIndex++;
             }
 
             showNextSite();
-            autoplayInterval = setInterval(showNextSite, 1500);
+            autoplayInterval = setInterval(showNextSite, 800);
         }
 
         function stopAutoPlay() {
