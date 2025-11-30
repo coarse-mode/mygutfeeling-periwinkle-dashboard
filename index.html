@@ -564,32 +564,79 @@
 
         .autoplay-controls {
             position: fixed;
-            top: 80px;
-            right: 20px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 1000;
         }
 
-        .autoplay-btn {
-            background: rgba(40,40,60,0.8);
-            border: 1px solid rgba(204,204,255,0.4);
-            color: #dcdcfc;
-            padding: 8px 16px;
-            border-radius: 4px;
+        .autoplay-bar {
+            background: rgba(25,25,40,0.85);
+            border: 1px solid rgba(204,204,255,0.3);
+            border-radius: 8px;
+            padding: 12px 25px;
             cursor: pointer;
-            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(204,204,255,0.2);
             transition: all 0.3s ease;
         }
 
-        .autoplay-btn:hover {
-            background: rgba(204,204,255,0.25);
-            border-color: rgba(204,204,255,0.6);
+        .autoplay-bar:hover {
+            box-shadow: 0 0 20px rgba(204,204,255,0.35);
+            border-color: rgba(204,204,255,0.5);
         }
 
-        .autoplay-btn.active {
-            background: rgba(204,204,255,0.3);
-            border-color: #ccccff;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(204,204,255,0.5);
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff3b3b;
+            border-radius: 50%;
+            animation: live-pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 6px #ff3b3b;
+        }
+
+        .live-text {
+            color: #ff3b3b;
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            animation: live-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes live-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .bar-mgf {
+            color: #b8b8ff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            animation: mgf-breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes mgf-breathe {
+            0%, 100% { color: #9999dd; text-shadow: none; }
+            50% { color: #ccccff; text-shadow: 0 0 8px rgba(180,180,255,0.5); }
+        }
+
+        .bar-text {
+            color: rgba(220,220,255,0.7);
+            font-size: 0.75rem;
+            font-weight: 400;
+        }
+
+        .bar-copyright {
+            color: rgba(220,220,255,0.5);
+            font-size: 0.65rem;
         }
 
         /* Mobile landscape - scale down tooltip */
@@ -641,7 +688,15 @@
     </div>
 
     <div class="autoplay-controls">
-        <button class="autoplay-btn" id="autoplay-toggle">▶ Auto-Play Tour</button>
+        <div class="autoplay-bar" id="autoplay-toggle">
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                <span class="live-text">LIVE</span>
+            </div>
+            <span class="bar-mgf">MyGutFeeling</span>
+            <span class="bar-text">Interactive Periwinkle Dashboard</span>
+            <span class="bar-copyright">© 2025</span>
+        </div>
     </div>
 
     <div id="map-container">
@@ -708,14 +763,14 @@
         </div>
     </div>
 
-    <div class="bottom-center-container">
+    <div class="bottom-center-container" style="display: none;">
         <!-- Hidden for production - check console for count or inspect #site-count -->
-        <div class="stats-overlay" style="display: none;">
+        <div class="stats-overlay">
             <div class="stat-value" id="site-count">0</div>
             <div class="stat-label">Illumination Sites</div>
         </div>
 
-        <div class="countdown-timer" id="countdown-display" style="display: none;">
+        <div class="countdown-timer" id="countdown-display">
             <div class="countdown-time" id="countdown-val">00:00:00</div>
             <div class="countdown-label">To Nov 30</div>
         </div>
@@ -1099,7 +1154,7 @@
             if (isAutoPlaying) return;
             isAutoPlaying = true;
             document.getElementById('autoplay-toggle').classList.add('active');
-            document.getElementById('autoplay-toggle').innerHTML = '⏸ Pause Tour';
+            // Bar stays the same - LIVE indicator always visible
 
             const activeBtn = document.querySelector('.year-btn.active');
             const currentYear = activeBtn ? activeBtn.dataset.year : 'all';
@@ -1145,7 +1200,7 @@
             isAutoPlaying = false;
             clearInterval(autoplayInterval);
             document.getElementById('autoplay-toggle').classList.remove('active');
-            document.getElementById('autoplay-toggle').innerHTML = '▶ Auto-Play Tour';
+            // Bar stays the same - LIVE indicator always visible
             tooltip.classList.remove('visible');
 
             svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity);
