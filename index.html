@@ -639,6 +639,12 @@
             font-size: 0.65rem;
         }
 
+        .play-pause-icon {
+            color: rgba(220,220,255,0.8);
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+
         /* Mobile landscape - scale down tooltip */
         @media screen and (max-height: 500px) {
             .tooltip { width: 180px; transform: scale(0.85); transform-origin: top left; }
@@ -689,6 +695,7 @@
 
     <div class="autoplay-controls">
         <div class="autoplay-bar" id="autoplay-toggle">
+            <span class="play-pause-icon" id="play-pause-icon">▶</span>
             <div class="live-indicator">
                 <span class="live-dot"></span>
                 <span class="live-text">LIVE</span>
@@ -1154,7 +1161,7 @@
             if (isAutoPlaying) return;
             isAutoPlaying = true;
             document.getElementById('autoplay-toggle').classList.add('active');
-            // Bar stays the same - LIVE indicator always visible
+            document.getElementById('play-pause-icon').textContent = '⏸';
 
             const activeBtn = document.querySelector('.year-btn.active');
             const currentYear = activeBtn ? activeBtn.dataset.year : 'all';
@@ -1200,7 +1207,7 @@
             isAutoPlaying = false;
             clearInterval(autoplayInterval);
             document.getElementById('autoplay-toggle').classList.remove('active');
-            // Bar stays the same - LIVE indicator always visible
+            document.getElementById('play-pause-icon').textContent = '▶';
             tooltip.classList.remove('visible');
 
             svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity);
