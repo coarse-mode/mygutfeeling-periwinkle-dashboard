@@ -619,8 +619,8 @@
     </div>
 
     <div class="controls">
-        <button class="year-btn" data-year="2025">2025</button>
-        <button class="year-btn active" data-year="2024">2024</button>
+        <!-- Hidden 2025 toggle - will be revealed when 2025 data exists -->
+        <button class="year-btn year-2025-toggle" data-year="2025" style="display: none;">2025</button>
     </div>
 
     <div class="autoplay-controls">
@@ -791,12 +791,16 @@
         }
 
         function launchComet() {
-            const startX = Math.random() < 0.5 ? -50 : width + 50;
-            const startY = Math.random() * height * 0.5;
-            const endX = startX < 0 ? width + 100 : -100;
-            const endY = startY + (Math.random() * 200 - 100);
+            // Gentle diagonal path from upper corners
+            const fromLeft = Math.random() < 0.5;
+            const startX = fromLeft ? -30 : width + 30;
+            const startY = Math.random() * height * 0.3 + 20;
+            const endX = fromLeft ? width * 0.6 + Math.random() * width * 0.3 : width * 0.1 + Math.random() * width * 0.3;
+            const endY = startY + height * 0.4 + Math.random() * height * 0.2;
+
+            // Gentle arc - almost straight line
             const cpX = (startX + endX) / 2;
-            const cpY = (startY + endY) / 2 - (Math.random() * 100);
+            const cpY = (startY + endY) / 2 - 30;
 
             const cometPath = g.append("path")
                 .attr("d", `M ${startX},${startY} Q ${cpX},${cpY} ${endX},${endY}`)
@@ -804,14 +808,20 @@
 
             const cometGroup = g.append("g");
 
-            cometGroup.append("ellipse")
-                .attr("cx", -10).attr("cy", 0).attr("rx", 15).attr("ry", 2.5)
-                .style("fill", "url(#comet-gradient)");
+            // Slim jet-line tail
+            cometGroup.append("line")
+                .attr("x1", 0).attr("y1", 0)
+                .attr("x2", -40).attr("y2", 0)
+                .style("stroke", "url(#comet-gradient)")
+                .style("stroke-width", 1.5)
+                .style("stroke-linecap", "round");
 
-            cometGroup.append("circle").attr("r", 2)
+            // Small bright head
+            cometGroup.append("circle").attr("r", 1.5)
                 .style("fill", "#fff").style("filter", "url(#glow)");
 
-            const duration = Math.random() * 4000 + 6000;
+            // Slow, graceful movement (15-25 seconds)
+            const duration = 15000 + Math.random() * 10000;
 
             cometGroup.transition().duration(duration).ease(d3.easeLinear)
                 .attrTween("transform", function() {
@@ -830,12 +840,12 @@
         }
 
         function startCometGeneration() {
-            setTimeout(launchComet, 500);
+            // First comet after 5 seconds
+            setTimeout(launchComet, 5000);
+            // Very rare comets - one every 25-45 seconds
             cometInterval = setInterval(() => {
-                if (Math.random() > 0.4) {
-                    launchComet();
-                }
-            }, Math.random() * 8000 + 7000);
+                launchComet();
+            }, 25000 + Math.random() * 20000);
         }
 
         const style = document.createElement('style');
@@ -878,7 +888,14 @@
                 createSkyBeams();
                 startCometGeneration();
 
-                renderMarkers('2024');
+                // Check if 2025 data exists and show toggle if so
+                const has2025 = sites.some(s => s.year === 2025);
+                if (has2025) {
+                    document.querySelector('.year-2025-toggle').style.display = 'block';
+                }
+
+                // Show all data by default
+                renderMarkers('all');
             }).catch(err => {
                 console.error("Failed to load map data", err);
             });
@@ -1176,6 +1193,13 @@
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
+
+        // Auto-start the tour after map loads
+        setTimeout(() => {
+            if (sites.length > 0) {
+                startAutoPlay();
+            }
+        }, 2000);
     </script>
 </body>
 </html>
