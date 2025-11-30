@@ -1240,8 +1240,8 @@
                 const site = orderedSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                // Gentler zoom: 1.2
-                const scale = 1.2;
+                // Gentle zoom: 1.1 (10% zoom)
+                const scale = 1.1;
                 const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
                 // Very slow, smooth transition - 2.5 seconds
@@ -1468,12 +1468,12 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Auto-start DISABLED - click Play button to start
-        // setTimeout(() => {
-        //     if (sites.length > 0) {
-        //         startAutoPlay();
-        //     }
-        // }, 2000);
+        // Auto-start enabled with scale 1.1
+        setTimeout(() => {
+            if (sites.length > 0) {
+                startAutoPlay();
+            }
+        }, 2000);
     </script>
 </body>
 </html>
