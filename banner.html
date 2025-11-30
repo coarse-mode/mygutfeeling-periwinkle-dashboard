@@ -8,36 +8,83 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0f;
+            background: linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0a0a0f 100%);
             color: #dcdcfc;
             overflow: hidden;
-            height: 250px;
+            height: 180px;
         }
 
         .banner-container {
             width: 100%;
-            height: 250px;
+            height: 180px;
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        .logo-left, .logo-right {
-            width: 200px;
+        /* Spinning Rings Logo - Left Side */
+        .logo-left {
+            width: 160px;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 100;
-            padding: 20px;
+            flex-shrink: 0;
         }
 
-        .logo-left img, .logo-right img {
-            max-height: 80px;
-            width: auto;
-            filter: drop-shadow(0 0 10px rgba(204,204,255,0.6));
+        .rings-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            opacity: 0.75;
         }
 
+        .rings-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ring {
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .ring-outer {
+            stroke: #9999dd;
+            animation: spin-cw 20s linear infinite, ring-glow 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 3px rgba(153, 153, 221, 0.5));
+        }
+
+        .ring-middle {
+            stroke: #8888cc;
+            animation: spin-ccw 15s linear infinite, ring-glow 3s ease-in-out infinite 1s;
+            filter: drop-shadow(0 0 3px rgba(136, 136, 204, 0.5));
+        }
+
+        .ring-inner {
+            stroke: #7777bb;
+            animation: spin-cw 10s linear infinite, ring-glow 3s ease-in-out infinite 2s;
+            filter: drop-shadow(0 0 3px rgba(119, 119, 187, 0.5));
+        }
+
+        @keyframes spin-cw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-ccw {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        @keyframes ring-glow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Map Container - Center */
         #map-container {
             flex: 1;
             height: 100%;
@@ -54,66 +101,90 @@
         .land {
             fill: #3a3a5a;
             stroke: #5a5a8a;
-            stroke-width: 0.4;
+            stroke-width: 0.3;
         }
 
         .graticule {
             fill: none;
             stroke: #1c1c29;
-            stroke-width: 0.3;
-            opacity: 0.2;
+            stroke-width: 0.2;
+            opacity: 0.15;
         }
 
         .marker-dot {
             fill: #ccccff;
-            filter: drop-shadow(0 0 4px rgba(204,204,255,0.9));
+            filter: drop-shadow(0 0 3px rgba(204,204,255,0.9));
         }
 
         .marker-ring {
             fill: none;
-            stroke: rgba(204,204,255,0.7);
-            stroke-width: 1.5;
-            animation: pulse-ring 2s ease-out infinite;
+            stroke: rgba(204,204,255,0.6);
+            stroke-width: 1;
+            animation: pulse-ring 2.5s ease-out infinite;
         }
 
         @keyframes pulse-ring {
-            0% { r: 3; opacity: 0.9; }
-            100% { r: 12; opacity: 0; }
+            0% { r: 2; opacity: 0.8; }
+            100% { r: 8; opacity: 0; }
         }
 
+        .star {
+            fill: #ffffff;
+            opacity: 0.25;
+        }
+
+        /* MGF Logo - Right Side */
+        .logo-right {
+            width: 180px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 15px;
+            flex-shrink: 0;
+        }
+
+        .logo-right img {
+            max-height: 110px;
+            width: auto;
+            filter: drop-shadow(0 0 12px rgba(204,204,255,0.5));
+        }
+
+        /* Footer Bar */
         .footer-bar {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(15,15,25,0.9);
-            padding: 8px 20px;
+            background: rgba(10,10,15,0.85);
+            padding: 5px 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            border-top: 1px solid rgba(204,204,255,0.2);
+            gap: 12px;
+            border-top: 1px solid rgba(204,204,255,0.15);
         }
 
         .live-indicator {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .live-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #ff3b3b;
             border-radius: 50%;
             animation: live-pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 6px #ff3b3b;
+            box-shadow: 0 0 4px #ff3b3b;
         }
 
         .live-text {
             color: #ff3b3b;
             font-weight: 800;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             letter-spacing: 0.1em;
             animation: live-pulse 2s ease-in-out infinite;
         }
@@ -126,53 +197,75 @@
         .bar-mgf {
             color: #b8b8ff;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             animation: mgf-breathe 4s ease-in-out infinite;
         }
 
         @keyframes mgf-breathe {
             0%, 100% { color: #9999dd; }
-            50% { color: #ccccff; text-shadow: 0 0 8px rgba(180,180,255,0.5); }
+            50% { color: #ccccff; text-shadow: 0 0 6px rgba(180,180,255,0.4); }
         }
 
         .bar-text {
-            color: rgba(220,220,255,0.6);
-            font-size: 0.7rem;
+            color: rgba(220,220,255,0.5);
+            font-size: 0.6rem;
         }
 
         .site-count {
             color: #ccccff;
             font-weight: 600;
-            font-size: 0.75rem;
-        }
-
-        .star {
-            fill: #ffffff;
-            opacity: 0.3;
+            font-size: 0.65rem;
         }
     </style>
 </head>
 <body>
     <div class="banner-container">
+        <!-- Spinning Rings Logo - Left -->
         <div class="logo-left">
-            <img src="https://images.squarespace-cdn.com/content/v1/572ffa0e27d4bdb4d519789e/1554086301102-A3JWP77TLEODYKY22TRY/MGF_LOGO_SCFOC_BLU_small.png" alt="MGF Logo">
+            <div class="rings-container">
+                <svg viewBox="0 0 100 100">
+                    <!-- Outer ring -->
+                    <g style="transform-origin: 50px 50px;" class="ring ring-outer">
+                        <circle cx="50" cy="50" r="45" stroke-dasharray="70 30"/>
+                    </g>
+                    <!-- Middle ring -->
+                    <g style="transform-origin: 50px 50px;" class="ring ring-middle">
+                        <circle cx="50" cy="50" r="35" stroke-dasharray="50 25"/>
+                    </g>
+                    <!-- Inner ring -->
+                    <g style="transform-origin: 50px 50px;" class="ring ring-inner">
+                        <circle cx="50" cy="50" r="25" stroke-dasharray="30 20"/>
+                    </g>
+                    <!-- Center glow -->
+                    <circle cx="50" cy="50" r="8" fill="url(#centerGlow)"/>
+                    <defs>
+                        <radialGradient id="centerGlow">
+                            <stop offset="0%" stop-color="#ccccff" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#9999dd" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                </svg>
+            </div>
         </div>
 
+        <!-- Dynamic Map - Center -->
         <div id="map-container">
             <svg id="map"></svg>
         </div>
 
+        <!-- MGF Logo - Right -->
         <div class="logo-right">
-            <img src="https://images.squarespace-cdn.com/content/572ffa0e27d4bdb4d519789e/3c24d684-bec3-4ab1-91e0-3c56e9e68943/TPOP_2026P_Peri.png" alt="TPOP Logo">
+            <img src="https://images.squarespace-cdn.com/content/572ffa0e27d4bdb4d519789e/3c24d684-bec3-4ab1-91e0-3c56e9e68943/TPOP_2026P_Peri.png" alt="Power of Periwinkle">
         </div>
 
+        <!-- Footer Bar -->
         <div class="footer-bar">
             <div class="live-indicator">
                 <span class="live-dot"></span>
                 <span class="live-text">LIVE</span>
             </div>
             <span class="bar-mgf">MyGutFeeling</span>
-            <span class="bar-text">Global Illumination Sites</span>
+            <span class="bar-text">Global Illumination</span>
             <span class="site-count" id="site-count">0 Sites</span>
         </div>
     </div>
@@ -187,21 +280,21 @@
 
         const svg = d3.select("#map").attr("viewBox", [0, 0, width, height]);
 
-        // Wider projection for banner format
+        // Projection optimized for banner format
         const projection = d3.geoNaturalEarth1()
-            .scale(width / 4)
-            .translate([width / 2, height / 2 + 20]);
+            .scale(width / 3.5)
+            .translate([width / 2, height / 2 + 5]);
 
         const path = d3.geoPath().projection(projection);
         const g = svg.append("g");
 
-        // Add some stars
-        for (let i = 0; i < 50; i++) {
+        // Add subtle stars
+        for (let i = 0; i < 30; i++) {
             g.append("circle")
                 .attr("class", "star")
                 .attr("cx", Math.random() * width)
                 .attr("cy", Math.random() * height)
-                .attr("r", Math.random() * 0.8 + 0.2);
+                .attr("r", Math.random() * 0.6 + 0.2);
         }
 
         // Load map and data
@@ -209,35 +302,36 @@
             d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"),
             fetch('data.json').then(r => r.json())
         ]).then(([world, sites]) => {
-            // Draw map
+            // Draw graticule
             g.append("path")
                 .datum(d3.geoGraticule())
                 .attr("class", "graticule")
                 .attr("d", path);
 
+            // Draw land
             g.append("path")
                 .datum(topojson.feature(world, world.objects.land))
                 .attr("class", "land")
                 .attr("d", path);
 
-            // Draw markers
-            sites.forEach(site => {
+            // Draw city markers with pulsing rings
+            sites.forEach((site, i) => {
                 const [x, y] = projection([site.lng, site.lat]);
-                if (x && y) {
+                if (x && y && x > 0 && x < width && y > 0 && y < height) {
                     // Pulsing ring
                     g.append("circle")
                         .attr("class", "marker-ring")
                         .attr("cx", x)
                         .attr("cy", y)
-                        .attr("r", 3)
-                        .style("animation-delay", Math.random() * 2 + "s");
+                        .attr("r", 2)
+                        .style("animation-delay", (Math.random() * 2.5) + "s");
 
                     // Center dot
                     g.append("circle")
                         .attr("class", "marker-dot")
                         .attr("cx", x)
                         .attr("cy", y)
-                        .attr("r", 2);
+                        .attr("r", 1.5);
                 }
             });
 
