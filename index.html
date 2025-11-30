@@ -1121,7 +1121,7 @@
                 const site = filteredSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                const scale = 3;
+                const scale = 2.5;
                 const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
                 svg.transition()
