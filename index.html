@@ -1175,12 +1175,14 @@
             const currentYear = activeBtn ? activeBtn.dataset.year : 'all';
             const filteredSites = currentYear === 'all' ? sites : sites.filter(s => s.year === parseInt(currentYear));
 
-            filteredSites.sort((a, b) => a.lng - b.lng);
+            // Create a smooth path using nearest-neighbor algorithm
+            // This travels around continents instead of jumping
+            const orderedSites = createSmoothPath(filteredSites);
 
             let currentIndex = 0;
 
             function showNextSite() {
-                if (!isAutoPlaying || currentIndex >= filteredSites.length) {
+                if (!isAutoPlaying || currentIndex >= orderedSites.length) {
                     if (isAutoPlaying) {
                         currentIndex = 0;
                     } else {
@@ -1188,16 +1190,16 @@
                     }
                 }
 
-                const site = filteredSites[currentIndex];
+                const site = orderedSites[currentIndex];
                 const [x, y] = projection([site.lng, site.lat]);
 
-                // Gentler zoom: 1.25 (range 1.15-1.35)
-                const scale = 1.25;
+                // Gentler zoom: 1.2
+                const scale = 1.2;
                 const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
-                // Smoother transition
+                // Very slow, smooth transition - 2.5 seconds
                 svg.transition()
-                    .duration(1200)
+                    .duration(2500)
                     .ease(d3.easeCubicInOut)
                     .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
 
@@ -1205,13 +1207,56 @@
                     if (isAutoPlaying) {
                         showAutoplayTooltip(site, x, y, scale);
                     }
-                }, 1000);
+                }, 2000);
 
                 currentIndex++;
             }
 
             showNextSite();
-            autoplayInterval = setInterval(showNextSite, 3500);
+            autoplayInterval = setInterval(showNextSite, 5000);
+        }
+
+        // Nearest-neighbor path algorithm - travels smoothly around continents
+        function createSmoothPath(sites) {
+            if (sites.length <= 1) return sites;
+
+            const remaining = [...sites];
+            const path = [];
+
+            // Start from westernmost site
+            remaining.sort((a, b) => a.lng - b.lng);
+            path.push(remaining.shift());
+
+            // Build path by always going to nearest unvisited site
+            while (remaining.length > 0) {
+                const current = path[path.length - 1];
+                let nearestIdx = 0;
+                let nearestDist = Infinity;
+
+                for (let i = 0; i < remaining.length; i++) {
+                    const dist = geoDistance(current, remaining[i]);
+                    if (dist < nearestDist) {
+                        nearestDist = dist;
+                        nearestIdx = i;
+                    }
+                }
+
+                path.push(remaining.splice(nearestIdx, 1)[0]);
+            }
+
+            return path;
+        }
+
+        // Haversine distance between two points
+        function geoDistance(a, b) {
+            const R = 6371;
+            const dLat = (b.lat - a.lat) * Math.PI / 180;
+            const dLng = (b.lng - a.lng) * Math.PI / 180;
+            const lat1 = a.lat * Math.PI / 180;
+            const lat2 = b.lat * Math.PI / 180;
+            const h = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng/2) * Math.sin(dLng/2);
+            return 2 * R * Math.asin(Math.sqrt(h));
         }
 
         function showAutoplayTooltip(site, x, y, scale) {
@@ -1234,19 +1279,35 @@
                 </div>
             `;
 
-            // Offset 15% of viewport width from city (adjusted by zoom)
-            const offsetX = window.innerWidth * 0.15 / scale;
-            const tooltipWidth = 280 * 0.7; // scaled tooltip width
+            const tooltipWidth = 280 * 0.7;
+            const tooltipHeight = 350 * 0.7;
+            const minOffset = 120; // minimum distance from city center
 
-            // Position to the right of city, or left if near right edge
-            let left = tx + offsetX;
-            let top = ty - 100;
+            // Determine which corner/edge to place tooltip (away from city)
+            // Place in the corner furthest from center of screen
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
 
-            if (left + tooltipWidth > window.innerWidth - 20) {
-                left = tx - offsetX - tooltipWidth;
+            let left, top;
+
+            // If city is left of center, place tooltip on right edge
+            // If city is right of center, place tooltip on left edge
+            if (tx < centerX) {
+                // City on left - place card on right side of screen
+                left = Math.min(window.innerWidth - tooltipWidth - 30, tx + minOffset);
+            } else {
+                // City on right - place card on left side of screen
+                left = Math.max(30, tx - tooltipWidth - minOffset);
             }
-            if (top < 60) top = 60;
-            if (top + 300 > window.innerHeight) top = window.innerHeight - 320;
+
+            // Vertical: place card above or below city, avoiding overlap
+            if (ty < centerY) {
+                // City in upper half - place card below
+                top = Math.min(window.innerHeight - tooltipHeight - 80, ty + minOffset);
+            } else {
+                // City in lower half - place card above
+                top = Math.max(60, ty - tooltipHeight - minOffset + 50);
+            }
 
             tooltip.style.left = left + 'px';
             tooltip.style.top = top + 'px';
